@@ -203,6 +203,68 @@ export interface HistorialStock {
   created_at: string;
 }
 
+// ---- Sprint 8 Types ----
+
+export interface WidgetDashboard {
+  id: string;
+  cliente_id: string;
+  usuario_id: string;
+  tipo: 'VENTAS' | 'METAS' | 'EQUIPO' | 'INVENTARIO' | 'DEUDAS' | 'FLUJO_CAJA' | 'REPORTES' | 'ACTIVIDAD';
+  titulo: string;
+  posicion: number;
+  tamaño: 'small' | 'medium' | 'large';
+  configuracion?: Record<string, any>;
+  visible: boolean;
+  orden: number;
+}
+
+export interface LogActividad {
+  id: string;
+  cliente_id: string;
+  usuario_id?: string;
+  accion: string;
+  recurso: string;
+  descripcion?: string;
+  detalles?: Record<string, any>;
+  created_at: string;
+}
+
+export interface Suscripcion {
+  id: string;
+  cliente_id: string;
+  plan: 'BASICO' | 'PRO' | 'EMPRESA';
+  usuarios_limite: number;
+  usuarios_actuales: number;
+  fecha_inicio: string;
+  fecha_vencimiento: string;
+  renovacion_automatica: boolean;
+  precio_mensual: number;
+  estado: 'ACTIVA' | 'VENCIDA' | 'CANCELADA' | 'SUSPENDIDA';
+}
+
+export interface Invitacion {
+  id: string;
+  cliente_id: string;
+  email: string;
+  rol: string;
+  estado: 'PENDIENTE' | 'ACEPTADA' | 'RECHAZADA' | 'EXPIRADA';
+  token_invitacion: string;
+  fecha_envio: string;
+  fecha_expiracion?: string;
+}
+
+export interface SesionActiva {
+  id: string;
+  usuario_id: string;
+  cliente_id: string;
+  ip_address: string;
+  dispositivo: string;
+  ubicacion?: string;
+  login_at: string;
+  ultima_actividad: string;
+  logout_at?: string;
+}
+
 export interface ProductoFiltros {
   search?: string;
   categoria?: string;

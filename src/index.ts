@@ -14,6 +14,8 @@ import deudasRoutes from './routes/deudas';
 import flujoCajaRoutes from './routes/flujo-caja';
 import metasRoutes from './routes/metas';
 import reportesRoutes from './routes/reportes';
+import dashboardRoutes from './routes/dashboard';
+import equipoRoutes from './routes/equipo';
 import { errorHandler } from './middleware/auth';
 
 const app = express();
@@ -38,6 +40,8 @@ app.use('/api/deudas', deudasRoutes);
 app.use('/api/flujo-caja', flujoCajaRoutes);
 app.use('/api/metas', metasRoutes);
 app.use('/api/reportes', reportesRoutes);
+app.use('/api/dashboard', dashboardRoutes);
+app.use('/api/equipo', equipoRoutes);
 
 app.use(errorHandler);
 
