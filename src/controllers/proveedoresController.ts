@@ -4,7 +4,7 @@ import { supabaseService } from '../services/supabaseService';
 export const proveedoresController = {
   async crear(req: Request, res: Response) {
     try {
-      const clienteId = req.usuario?.cliente_id;
+      const clienteId = req.usuario!.cliente_id;
       const { nombre, email, telefono, numero_whatsapp, ciudad, direccion, ruc_proveedor, notas } = req.body;
 
       if (!nombre) {
@@ -31,7 +31,7 @@ export const proveedoresController = {
 
   async listar(req: Request, res: Response) {
     try {
-      const clienteId = req.usuario?.cliente_id;
+      const clienteId = req.usuario!.cliente_id;
 
       const proveedores = await supabaseService.getProveedores(clienteId);
 

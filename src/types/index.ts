@@ -18,6 +18,7 @@ export interface Usuario {
   whatsapp?: string;
   rol: 'ADMIN' | 'VENDEDOR' | 'ALMACENERO';
   estado: 'ACTIVO' | 'INACTIVO' | 'SUSPENDIDO';
+  es_admin_sistema: boolean;
   ultimo_login?: string;
   created_at: string;
 }
@@ -32,6 +33,12 @@ export interface SignUpPayload {
   password: string;
   full_name: string;
   whatsapp: string;
+  // Step 2 — empresa
+  empresa_nombre?: string;
+  ruc?: string;
+  industria?: string;
+  provincia?: string;
+  ciudad?: string;
 }
 
 export interface AuthResponse {
@@ -57,6 +64,7 @@ export interface JWTPayload {
   cliente_id: string;
   email: string;
   rol: string;
+  es_admin_sistema?: boolean;
 }
 
 // ---- Sprint 2 Types ----

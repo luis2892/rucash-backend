@@ -9,6 +9,7 @@ declare global {
         cliente_id: string;
         email: string;
         rol: string;
+        es_admin_sistema?: boolean;
       };
     }
   }

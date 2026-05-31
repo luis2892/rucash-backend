@@ -6,7 +6,7 @@ export const configController = {
 
   async crearEmpresaConfig(req: Request, res: Response) {
     try {
-      const clienteId = req.usuario?.cliente_id;
+      const clienteId = req.usuario!.cliente_id;
       const { moneda_preferida, provincia, ciudad, industria } = req.body;
 
       const config = await supabaseService.createEmpresaConfig(clienteId, {
@@ -24,7 +24,7 @@ export const configController = {
 
   async obtenerEmpresaConfig(req: Request, res: Response) {
     try {
-      const clienteId = req.usuario?.cliente_id;
+      const clienteId = req.usuario!.cliente_id;
 
       const config = await supabaseService.getEmpresaConfig(clienteId);
       if (!config) {
@@ -39,7 +39,7 @@ export const configController = {
 
   async actualizarEmpresaConfig(req: Request, res: Response) {
     try {
-      const clienteId = req.usuario?.cliente_id;
+      const clienteId = req.usuario!.cliente_id;
       const updates = req.body;
 
       const config = await supabaseService.updateEmpresaConfig(clienteId, updates);
@@ -67,7 +67,7 @@ export const configController = {
 
   async actualizarConfigSistema(req: Request, res: Response) {
     try {
-      const usuarioId = req.usuario?.id;
+      const usuarioId = req.usuario!.usuario_id;
       const updates = req.body;
 
       const config = await supabaseService.getConfigSistema();

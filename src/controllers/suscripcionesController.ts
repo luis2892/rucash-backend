@@ -115,7 +115,7 @@ export const suscripcionesController = {
 
   async getAlertas(req: Request, res: Response) {
     try {
-      const clienteId = req.usuario?.cliente_id;
+      const clienteId = req.usuario!.cliente_id;
 
       const alertas = await supabaseService.getAlertasSuscripcion(clienteId);
 

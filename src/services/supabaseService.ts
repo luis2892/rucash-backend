@@ -5,10 +5,11 @@ import { Cliente, Usuario } from '../types';
 export const supabaseService = {
   // ---- Sprint 1 methods ----
 
-  async createCliente(email: string, nombre: string, whatsapp: string): Promise<Cliente> {
+  async createCliente(email: string, nombre: string, whatsapp: string, ruc?: string): Promise<Cliente> {
+    const fechaVencimiento = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
     const { data, error } = await supabaseAdmin
       .from('clientes')
-      .insert([{ email, nombre, whatsapp, estado: 'PRUEBA', fecha_vencimiento: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000) }])
+      .insert([{ email, nombre, whatsapp, ruc: ruc || null, estado: 'PRUEBA', fecha_vencimiento: fechaVencimiento }])
       .select().single();
     if (error) throw new Error(`Error creando cliente: ${error.message}`);
     return data;
@@ -27,6 +28,16 @@ export const supabaseService = {
   async getUsuarioByEmail(email: string) {
     const { data, error } = await supabaseAdmin
       .from('usuarios').select('*, clientes(*)').eq('email', email).single();
+    if (error) {
+      if (error.code === 'PGRST116') return null;
+      throw error;
+    }
+    return data;
+  },
+
+  async getUsuarioById(id: string) {
+    const { data, error } = await supabaseAdmin
+      .from('usuarios').select('*, clientes(*)').eq('id', id).single();
     if (error) {
       if (error.code === 'PGRST116') return null;
       throw error;
