@@ -13,6 +13,7 @@ import categoriasRoutes from './routes/categorias';
 import deudasRoutes from './routes/deudas';
 import flujoCajaRoutes from './routes/flujo-caja';
 import metasRoutes from './routes/metas';
+import reportesRoutes from './routes/reportes';
 import { errorHandler } from './middleware/auth';
 
 const app = express();
@@ -36,6 +37,7 @@ app.use('/api/categorias', categoriasRoutes);
 app.use('/api/deudas', deudasRoutes);
 app.use('/api/flujo-caja', flujoCajaRoutes);
 app.use('/api/metas', metasRoutes);
+app.use('/api/reportes', reportesRoutes);
 
 app.use(errorHandler);
 
