@@ -9,6 +9,7 @@ import authRoutes from './routes/auth';
 import authAdvancedRoutes from './routes/authAdvanced';
 import productosRoutes from './routes/products';
 import ventasRoutes from './routes/sales';
+import categoriasRoutes from './routes/categorias';
 import { errorHandler } from './middleware/auth';
 
 const app = express();
@@ -28,6 +29,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/auth', authAdvancedRoutes);
 app.use('/api/productos', productosRoutes);
 app.use('/api/ventas', ventasRoutes);
+app.use('/api/categorias', categoriasRoutes);
 
 app.use(errorHandler);
 
