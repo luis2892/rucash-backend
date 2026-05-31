@@ -8,15 +8,15 @@ const REFRESH_SECRET = process.env.REFRESH_SECRET || 'refresh-secret-key';
 
 export const jwtService = {
   generateAccessToken(payload: JWTPayload): string {
-    return jwt.sign(payload, JWT_SECRET, {
-      expiresIn: JWT_EXPIRES_IN,
+    return jwt.sign(payload as object, JWT_SECRET, {
+      expiresIn: JWT_EXPIRES_IN as any,
       algorithm: 'HS256',
     });
   },
 
   generateRefreshToken(payload: JWTPayload): string {
-    return jwt.sign(payload, REFRESH_SECRET, {
-      expiresIn: '30d',
+    return jwt.sign(payload as object, REFRESH_SECRET, {
+      expiresIn: '30d' as any,
       algorithm: 'HS256',
     });
   },
