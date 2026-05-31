@@ -16,6 +16,9 @@ import metasRoutes from './routes/metas';
 import reportesRoutes from './routes/reportes';
 import dashboardRoutes from './routes/dashboard';
 import equipoRoutes from './routes/equipo';
+import suscripcionesRoutes from './routes/suscripciones';
+import configRoutes from './routes/config';
+import proveedoresRoutes from './routes/proveedores';
 import { errorHandler } from './middleware/auth';
 
 const app = express();
@@ -42,6 +45,9 @@ app.use('/api/metas', metasRoutes);
 app.use('/api/reportes', reportesRoutes);
 app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/equipo', equipoRoutes);
+app.use('/api/suscripciones', suscripcionesRoutes);
+app.use('/api/config', configRoutes);
+app.use('/api/proveedores', proveedoresRoutes);
 
 app.use(errorHandler);
 

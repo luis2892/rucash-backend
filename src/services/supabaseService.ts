@@ -202,4 +202,291 @@ export const supabaseService = {
       .insert([{ usuario_id: usuarioId, cliente_id: clienteId, evento, ip_address: ipAddress, user_agent: userAgent, detalles }]);
     if (error) console.error('Error logging security event:', error);
   },
+
+  // ---- Sprint 5 methods ----
+
+  // Empresas Config
+  async createEmpresaConfig(clienteId: string, data: any) {
+    const { data: result, error } = await supabaseAdmin
+      .from('empresas_config')
+      .insert([{ cliente_id: clienteId, ...data }])
+      .select().single();
+    if (error) throw new Error(`Error creating empresa config: ${error.message}`);
+    return result;
+  },
+
+  async getEmpresaConfig(clienteId: string) {
+    const { data, error } = await supabaseAdmin
+      .from('empresas_config')
+      .select()
+      .eq('cliente_id', clienteId)
+      .single();
+    if (error && error.code !== 'PGRST116') throw error;
+    return data || null;
+  },
+
+  async updateEmpresaConfig(clienteId: string, updates: any) {
+    const { data, error } = await supabaseAdmin
+      .from('empresas_config')
+      .update(updates)
+      .eq('cliente_id', clienteId)
+      .select().single();
+    if (error) throw new Error(`Error updating empresa config: ${error.message}`);
+    return data;
+  },
+
+  // Suscripciones
+  async createSuscripcion(clienteId: string, plan: string, fechaVencimiento: Date, estado: string = 'ACTIVO') {
+    const { data, error } = await supabaseAdmin
+      .from('suscripciones')
+      .insert([{ cliente_id: clienteId, plan, fecha_vencimiento: fechaVencimiento, estado }])
+      .select().single();
+    if (error) throw new Error(`Error creating suscripción: ${error.message}`);
+    return data;
+  },
+
+  async getSuscripcion(clienteId: string) {
+    const { data, error } = await supabaseAdmin
+      .from('suscripciones')
+      .select()
+      .eq('cliente_id', clienteId)
+      .single();
+    if (error && error.code !== 'PGRST116') throw error;
+    return data || null;
+  },
+
+  async getAllSuscripciones() {
+    const { data, error } = await supabaseAdmin
+      .from('suscripciones')
+      .select();
+    if (error) throw error;
+    return data || [];
+  },
+
+  async updateSuscripcion(clienteId: string, updates: any) {
+    const { data, error } = await supabaseAdmin
+      .from('suscripciones')
+      .update(updates)
+      .eq('cliente_id', clienteId)
+      .select().single();
+    if (error) throw new Error(`Error updating suscripción: ${error.message}`);
+    return data;
+  },
+
+  // Alertas Suscripción
+  async createAlertaSuscripcion(clienteId: string, tipo: string) {
+    const { data, error } = await supabaseAdmin
+      .from('alertas_suscripcion')
+      .insert([{ cliente_id: clienteId, tipo }])
+      .select().single();
+    if (error) throw new Error(`Error creating alerta suscripción: ${error.message}`);
+    return data;
+  },
+
+  async getAlertasSuscripcion(clienteId: string) {
+    const { data, error } = await supabaseAdmin
+      .from('alertas_suscripcion')
+      .select()
+      .eq('cliente_id', clienteId)
+      .eq('enviado_a', false);
+    if (error) throw error;
+    return data || [];
+  },
+
+  // Config Sistema
+  async getConfigSistema() {
+    const { data, error } = await supabaseAdmin
+      .from('config_sistema')
+      .select()
+      .limit(1)
+      .single();
+    if (error && error.code !== 'PGRST116') throw error;
+    return data || null;
+  },
+
+  async updateConfigSistema(updates: any, usuarioId: string) {
+    const config = await this.getConfigSistema();
+    const { data, error } = await supabaseAdmin
+      .from('config_sistema')
+      .update({ ...updates, updated_by_usuario_id: usuarioId, updated_at: new Date() })
+      .eq('id', config?.id || '')
+      .select().single();
+    if (error) throw new Error(`Error updating config sistema: ${error.message}`);
+    return data;
+  },
+
+  async logConfigChange(field: string, oldValue: any, newValue: any, usuarioId: string) {
+    const { error } = await supabaseAdmin
+      .from('config_logs')
+      .insert([{ campo_modificado: field, valor_anterior: oldValue, valor_nuevo: newValue, usuario_id: usuarioId }]);
+    if (error) console.error('Error logging config change:', error);
+  },
+
+  // Proveedores
+  async createProveedor(clienteId: string, data: any) {
+    const { data: result, error } = await supabaseAdmin
+      .from('proveedores')
+      .insert([{ cliente_id: clienteId, ...data }])
+      .select().single();
+    if (error) throw new Error(`Error creating proveedor: ${error.message}`);
+    return result;
+  },
+
+  async getProveedores(clienteId: string) {
+    const { data, error } = await supabaseAdmin
+      .from('proveedores')
+      .select()
+      .eq('cliente_id', clienteId)
+      .eq('activo', true)
+      .order('nombre', { ascending: true });
+    if (error) throw error;
+    return data || [];
+  },
+
+  async getProveedor(id: string) {
+    const { data, error } = await supabaseAdmin
+      .from('proveedores')
+      .select()
+      .eq('id', id)
+      .single();
+    if (error && error.code !== 'PGRST116') throw error;
+    return data || null;
+  },
+
+  async updateProveedor(id: string, updates: any) {
+    const { data, error } = await supabaseAdmin
+      .from('proveedores')
+      .update(updates)
+      .eq('id', id)
+      .select().single();
+    if (error) throw new Error(`Error updating proveedor: ${error.message}`);
+    return data;
+  },
+
+  async deactivateProveedor(id: string) {
+    return this.updateProveedor(id, { activo: false });
+  },
+
+  // Deudas
+  async createDeuda(clienteId: string, data: any) {
+    const { data: result, error } = await supabaseAdmin
+      .from('deudas')
+      .insert([{ cliente_id: clienteId, ...data }])
+      .select().single();
+    if (error) throw new Error(`Error creating deuda: ${error.message}`);
+    return result;
+  },
+
+  async getDeudas(clienteId: string, estado?: string) {
+    let query = supabaseAdmin
+      .from('deudas')
+      .select()
+      .eq('cliente_id', clienteId);
+    if (estado) query = query.eq('estado', estado);
+    const { data, error } = await query.order('fecha_vencimiento', { ascending: true });
+    if (error) throw error;
+    return data || [];
+  },
+
+  async getDeuda(id: string) {
+    const { data, error } = await supabaseAdmin
+      .from('deudas')
+      .select()
+      .eq('id', id)
+      .single();
+    if (error && error.code !== 'PGRST116') throw error;
+    return data || null;
+  },
+
+  async updateDeuda(id: string, updates: any) {
+    const { data, error } = await supabaseAdmin
+      .from('deudas')
+      .update(updates)
+      .eq('id', id)
+      .select().single();
+    if (error) throw new Error(`Error updating deuda: ${error.message}`);
+    return data;
+  },
+
+  // Pagos Deuda
+  async createPagoDeuda(deudaId: string, monto: number, fechaPago: Date, metodoPago: string) {
+    const { data, error } = await supabaseAdmin
+      .from('pagos_deuda')
+      .insert([{ deuda_id: deudaId, monto_pagado: monto, fecha_pago: fechaPago, metodo_pago: metodoPago }])
+      .select().single();
+    if (error) throw new Error(`Error creating pago deuda: ${error.message}`);
+    return data;
+  },
+
+  async getPagosDeuda(deudaId: string) {
+    const { data, error } = await supabaseAdmin
+      .from('pagos_deuda')
+      .select()
+      .eq('deuda_id', deudaId)
+      .order('fecha_pago', { ascending: false });
+    if (error) throw error;
+    return data || [];
+  },
+
+  // Cuentas
+  async createCuenta(clienteId: string, data: any) {
+    const { data: result, error } = await supabaseAdmin
+      .from('cuentas')
+      .insert([{ cliente_id: clienteId, ...data }])
+      .select().single();
+    if (error) throw new Error(`Error creating cuenta: ${error.message}`);
+    return result;
+  },
+
+  async getCuentas(clienteId: string) {
+    const { data, error } = await supabaseAdmin
+      .from('cuentas')
+      .select()
+      .eq('cliente_id', clienteId)
+      .eq('activo', true)
+      .order('banco', { ascending: true });
+    if (error) throw error;
+    return data || [];
+  },
+
+  async getCuenta(id: string) {
+    const { data, error } = await supabaseAdmin
+      .from('cuentas')
+      .select()
+      .eq('id', id)
+      .single();
+    if (error && error.code !== 'PGRST116') throw error;
+    return data || null;
+  },
+
+  async updateCuenta(id: string, updates: any) {
+    const { data, error } = await supabaseAdmin
+      .from('cuentas')
+      .update(updates)
+      .eq('id', id)
+      .select().single();
+    if (error) throw new Error(`Error updating cuenta: ${error.message}`);
+    return data;
+  },
+
+  // Transacciones Financieras
+  async createTransaccion(cuentaId: string, tipo: string, monto: number, concepto: string, saldoAnterior: number) {
+    const saldoNuevo = tipo === 'INGRESO' ? saldoAnterior + monto : saldoAnterior - monto;
+    const { data, error } = await supabaseAdmin
+      .from('transacciones_financieras')
+      .insert([{ cuenta_id: cuentaId, tipo, monto, concepto, saldo_anterior: saldoAnterior, saldo_nuevo: saldoNuevo }])
+      .select().single();
+    if (error) throw new Error(`Error creating transacción: ${error.message}`);
+    return data;
+  },
+
+  async getTransacciones(cuentaId: string) {
+    const { data, error } = await supabaseAdmin
+      .from('transacciones_financieras')
+      .select()
+      .eq('cuenta_id', cuentaId)
+      .order('created_at', { ascending: false });
+    if (error) throw error;
+    return data || [];
+  },
 };
