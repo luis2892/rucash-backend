@@ -10,6 +10,8 @@ import authAdvancedRoutes from './routes/authAdvanced';
 import productosRoutes from './routes/products';
 import ventasRoutes from './routes/sales';
 import categoriasRoutes from './routes/categorias';
+import deudasRoutes from './routes/deudas';
+import flujoCajaRoutes from './routes/flujo-caja';
 import { errorHandler } from './middleware/auth';
 
 const app = express();
@@ -30,6 +32,8 @@ app.use('/api/auth', authAdvancedRoutes);
 app.use('/api/productos', productosRoutes);
 app.use('/api/ventas', ventasRoutes);
 app.use('/api/categorias', categoriasRoutes);
+app.use('/api/deudas', deudasRoutes);
+app.use('/api/flujo-caja', flujoCajaRoutes);
 
 app.use(errorHandler);
 
