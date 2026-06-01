@@ -50,8 +50,24 @@ export const categoriasController = {
     try {
       const clienteId = req.usuario?.cliente_id;
       const { id } = req.params;
-      const updates = { ...req.body, updated_at: new Date() };
+      const userRole = req.usuario?.rol;
 
+      const { data: categoria, error: catError } = await supabase
+        .from('categorias')
+        .select('*')
+        .eq('id', id)
+        .eq('cliente_id', clienteId)
+        .single();
+
+      if (catError || !categoria) {
+        return res.status(404).json({ message: 'Categoría no encontrada' });
+      }
+
+      if (userRole !== 'ADMIN' && (!categoria.permite_edicion_almacenero || userRole !== 'ALMACENERO')) {
+        return res.status(403).json({ message: 'No tienes permisos para editar esta categoría' });
+      }
+
+      const updates = { ...req.body, updated_at: new Date() };
       const { data, error } = await supabase
         .from('categorias')
         .update(updates)

@@ -6,7 +6,7 @@ const router = Router();
 
 router.get('/', authMiddleware, categoriasController.listar);
 router.post('/', authMiddleware, requireRole('ADMIN'), categoriasController.crear);
-router.put('/:id', authMiddleware, requireRole('ADMIN'), categoriasController.actualizar);
+router.put('/:id', authMiddleware, categoriasController.actualizar);
 router.delete('/:id', authMiddleware, requireRole('ADMIN'), categoriasController.eliminar);
 
 export default router;
